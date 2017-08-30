@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.hscc_hsinwei.predictyourlife.MainActivity">
+
+    <LinearLayout
+        android:layout_width="379dp"
+        android:layout_height="487dp"
+        android:orientation="vertical"
+        android:weightSum="1"
+        tools:layout_editor_absoluteX="3dp"
+        tools:layout_editor_absoluteY="12dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="87dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="92dp"
+            android:orientation="horizontal"
+            app:layout_constraintRight_toRightOf="parent"
+            tools:layout_editor_absoluteY="161dp">
+
+            <TextView
+                android:id="@+id/path"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="File path..."
+                tools:layout_editor_absoluteX="16dp"
+                tools:layout_editor_absoluteY="39dp" />
+
+            <Button
+                android:id="@+id/selectFile"
+                android:layout_width="71dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.10"
+                android:text="Select File"
+                tools:layout_editor_absoluteX="222dp"
+                tools:layout_editor_absoluteY="16dp" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/fileContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.21"
+            android:text="View..." />
+
+        <Button
+            android:id="@+id/prefixSpanButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="PrefixSpan" />
+
+        <EditText
+            android:id="@+id/minSupEdit"
+            android:layout_width="230dp"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="phone"
+            android:text="0.5" />
+
+        <TextView
+            android:id="@+id/minSupTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Min Support" />
+
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>
