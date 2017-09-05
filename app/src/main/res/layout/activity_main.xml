@@ -56,6 +56,12 @@
             android:layout_height="wrap_content"
             android:text="PrefixSpan" />
 
+        <Button
+            android:id="@+id/SPADEbutton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="SPADE" />
+
         <EditText
             android:id="@+id/minSupEdit"
             android:layout_width="230dp"

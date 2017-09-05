@@ -21,6 +21,14 @@ import java.util.List;
 import ca.pfv.spmf.algorithms.sequentialpatterns.prefixspan.AlgoPrefixSpan;
 import ca.pfv.spmf.algorithms.sequentialpatterns.prefixspan.SequentialPattern;
 import ca.pfv.spmf.algorithms.sequentialpatterns.prefixspan.SequentialPatterns;
+import ca.pfv.spmf.algorithms.sequentialpatterns.spade_spam_AGP.AlgoSPADE;
+import ca.pfv.spmf.algorithms.sequentialpatterns.spade_spam_AGP.candidatePatternsGeneration.CandidateGenerator;
+import ca.pfv.spmf.algorithms.sequentialpatterns.spade_spam_AGP.candidatePatternsGeneration.CandidateGenerator_Qualitative;
+import ca.pfv.spmf.algorithms.sequentialpatterns.spade_spam_AGP.dataStructures.creators.AbstractionCreator;
+import ca.pfv.spmf.algorithms.sequentialpatterns.spade_spam_AGP.dataStructures.creators.AbstractionCreator_Qualitative;
+import ca.pfv.spmf.algorithms.sequentialpatterns.spade_spam_AGP.dataStructures.database.SequenceDatabase;
+import ca.pfv.spmf.algorithms.sequentialpatterns.spade_spam_AGP.idLists.creators.IdListCreator;
+import ca.pfv.spmf.algorithms.sequentialpatterns.spade_spam_AGP.idLists.creators.IdListCreator_FatBitmap;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -28,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView filePath;
     private TextView fileContent;
     private Button prefixSpanB;
+    private Button SPADEB;
     private EditText minSup;
 
     @Override
@@ -38,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
         filePath = (TextView)findViewById(R.id.path);
         fileContent = (TextView)findViewById(R.id.fileContent);
         prefixSpanB = (Button)findViewById(R.id.prefixSpanButton);
+        SPADEB = (Button)findViewById(R.id.SPADEbutton);
         minSup = (EditText)findViewById(R.id.minSupEdit);
 
         selectFile.setOnClickListener(new Button.OnClickListener(){
@@ -72,6 +82,27 @@ public class MainActivity extends AppCompatActivity {
                 //切換Activity
                 startActivity(intent);
             }
+
+        });
+
+        SPADEB.setOnClickListener(new Button.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                //new一個intent物件，並指定Activity切換的class
+                Intent intent = new Intent();
+                intent.setClass(MainActivity.this, ResultActivity.class);
+
+                //new一個Bundle物件，並將要傳遞的資料傳入
+                Bundle bundle = new Bundle();
+                bundle.putString("result", SPADE(filePath.getText().toString(),Double.parseDouble(minSup.getText().toString())));
+
+                //將Bundle物件assign給intent
+                intent.putExtras(bundle);
+
+                //切換Activity
+                startActivity(intent);
+            }
+
         });
     }
 
@@ -151,6 +182,45 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return result;
+    }
+
+    public String SPADE(String uri,double minSup){
+        String result="";
+        // Load a sequence database
+        double support = minSup;
+
+        boolean keepPatterns = true;
+        boolean verbose = false;
+
+        AbstractionCreator abstractionCreator = AbstractionCreator_Qualitative.getInstance();
+        boolean dfs=true;
+
+        // if you set the following parameter to true, the sequence ids of the sequences where
+        // each pattern appears will be shown in the result
+        boolean outputSequenceIdentifiers = false;
+
+        IdListCreator idListCreator = IdListCreator_FatBitmap.getInstance();
+
+        CandidateGenerator candidateGenerator = CandidateGenerator_Qualitative.getInstance();
+
+        SequenceDatabase sequenceDatabase = new SequenceDatabase(abstractionCreator, idListCreator);
+
+        try {
+            sequenceDatabase.loadFile(uri, support);
+            result+=(sequenceDatabase.toString()+"\n");
+
+            AlgoSPADE algorithm = new AlgoSPADE(support,dfs,abstractionCreator);
+
+            algorithm.runAlgorithm(sequenceDatabase, candidateGenerator,keepPatterns,verbose,null,outputSequenceIdentifiers);
+            result+=("Minimum support (relative) = "+support+"\n");
+            result+=(algorithm.getNumberOfFrequentPatterns()+ " frequent patterns."+"\n");
+
+            result+=(algorithm.printStatistics()+"\n");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         return result;
     }
 }
